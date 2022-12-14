@@ -1,4 +1,11 @@
 const express = require("express");
+const bodyParser = require("body-parser");
+
+// Load environment variables
+require('dotenv').config()
+
+// test
+console.log(process.env.BASE_URI);
 
 // Import the mongoose module
 const mongoose = require("mongoose");
@@ -15,6 +22,8 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // Create Webserver
 const app = express();
+
+// Use bodyparser to parse x-form-www-urlencoded
 
 const notesRouter = require("./routers/notesRouter");
 
