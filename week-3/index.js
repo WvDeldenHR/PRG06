@@ -24,8 +24,10 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 const app = express();
 
 // Use bodyparser to parse x-form-www-urlencoded
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json({type:'application/json'}));
 
-const notesRouter = require("./routers/notesRouter");
+const notesRouter = require("./routes/notesRoutes");
 
 // Create Route /
 app.use("/notes/", notesRouter)
