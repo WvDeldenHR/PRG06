@@ -23,14 +23,18 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 // Create Webserver
 const app = express();
 
-// Use bodyparser to parse x-form-www-urlencoded
+// Use bodyparser middleware to parse x-form-www-urlencoded
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json({type:'application/json'}));
+// Use bodyparser middleware to parse json data
+app.use(bodyParser.json({ type: 'application/json' }));
 
-const notesRouter = require("./routes/notesRoutes");
+// Create endpoint and connect to notes router
+app.use("/notes/", require('./routes/notesRoutes'))
 
-// Create Route /
-app.use("/notes/", notesRouter)
+// const notesRouter = require("./routes/notesRoutes");
+//
+// // Create Route /
+// app.use("/notes/", notesRouter)
 
 // Start Webserver on Port 8000
 app.listen(8000, () => {

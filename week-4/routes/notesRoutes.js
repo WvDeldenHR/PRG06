@@ -50,12 +50,24 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-// Middleware checkt header content-type
+// Use middleware to check headers for POST
 router.post("/", (req, res, next) => {
+    console.log("POST middleware to check Content-Type")
     if (req.header("Content-Type") === "application/json") {
         next();
     } else {
-        res.status(415).send();
+        res.status(400).send();
+    }
+});
+
+// Add middleware to disallow empty values
+router.post("/", (req, res, next) => {
+    console.log("POST middleware to check empty values")
+
+    if (req.body.title && req.body.body && req.body.title) {
+        next();
+    } else {
+        res.status(400).send();
     }
 });
 
@@ -77,16 +89,32 @@ router.post("/", async (req, res) => {
     }
 })
 
-// // Create Route /
-// router.delete("/", (req, res) => {
-//     console.log("DELETE");
-//     res.send("Hello Express!!!");
-// })
-//
-
 router.options("/", (req, res) => {
+    console.log(`OPTIONS request for collection /`);
     res.setHeader("Allow", "GET, POST, OPTIONS");
     res.send();
 })
 
+router.options("/:id", (req, res) => {
+    console.log(`OPTIONS request for detail ${req.params.id}`);
+    res.set({
+        'Allow': "GET, PUT, DELETE, OPTIONS"
+    }).send();
+})
+
+// Detail: DELETE /id
+router.delete("/:id", async (req, res) => {
+    console.log(`DELETE request for detail ${req.params.id}`);
+
+    try {
+        let notes = await Note.findByIdAndDelete(req.params.id);
+
+        res.status(204).send();
+    } catch {
+        // id not found, send 404
+        res.status(404).send();
+    }
+})
+
+// Export router
 module.exports = router;
